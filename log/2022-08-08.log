@@ -1,3 +1,0 @@
-2022-08-08 17:24:36.779 [INFO] {10820a8258540917e56710072acc8fb0} {"Accept":["*/*"],"Accept-Encoding":["gzip, deflate, br"],"Authorization":["Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjAyMzc0NDksImlkIjo1MDAsIm5hbWUiOiLmnY7kv4oiLCJvcmlnX2lhdCI6MTY1OTkzNzQ0OX0.Y1sPiY8Bof_GTCDPGrxROrWqV3d9o9r8HUAW29xXpRs"],"Connection":["keep-alive"],"Content-Length":["10"],"Content-Type":["application/json"],"Postman-Token":["b4fbc795-f7e4-427f-b18a-85772652f69a"],"User-Agent":["PostmanRuntime/7.28.4"]} {
-    
-} 
