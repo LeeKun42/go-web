@@ -1,0 +1,8 @@
+
+# CLI tool, only in development environment.
+# https://goframe.org/pages/viewpage.action?pageId=3673173
+gfcli:
+  gen:
+    dao:
+      - link: "mysql:jjcc:j62nusynXtijrUlb@tcp(127.0.0.1:3309)/jjcc_system"
+      - jsonCase: "Snake"
