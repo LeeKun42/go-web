@@ -35,10 +35,10 @@ func QueueWork(ctx context.Context, name string) {
 	if err != nil {
 		panic(err)
 	}
-	smsQueueKey := "queue:" + name
+	queueKey := "queue:" + name
 	for {
 		fmt.Println("queue " + name + " work pop job")
-		result, err := conn.Do(ctx, "BLPOP", smsQueueKey, 5)
+		result, err := conn.Do(ctx, "BLPOP", queueKey, 5)
 		if err != nil { //获取出错
 			time.Sleep(time.Second * 1)
 			fmt.Println("err continue", err)
