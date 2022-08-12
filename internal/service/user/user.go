@@ -60,6 +60,7 @@ func (us *userService) GetList(ctx context.Context, input model.GetUserInput) (r
 func (us *userService) GetUserInfoByUid(ctx context.Context, uid int) (res *entity.AdminUser) {
 	model := dao.AdminUser.Ctx(ctx)
 	model.WherePri(uid).Scan(&res)
+	res.Mobile = util.Mobile.Decrypt(res.Mobile)
 	return
 }
 
