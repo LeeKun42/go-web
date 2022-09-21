@@ -23,6 +23,8 @@ gf run main.go
 
 ```bash
 gf gen dao --tables=user 生成数据层dao文件
+
 ./main test:work 测试自定义命令行
+
 ./main queue:work --name=sms 自定义队列消费命令, name可选email
 ```
