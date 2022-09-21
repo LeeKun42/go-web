@@ -3,17 +3,18 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gcmd"
 	"go-web/internal/controller"
 	"go-web/internal/cron"
 	"go-web/internal/job"
 	"go-web/internal/service/user"
-
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/os/gcmd"
+	"go-web/internal/util"
 )
 
-/**
+/*
+*
 检查是否登录，检查不通过响应{"code":401, "message":"xxx"}
 */
 func checkLogin(r *ghttp.Request) {
@@ -62,6 +63,8 @@ var (
 		Brief: "test Brief",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			fmt.Println("this is command test")
+			fmt.Println(util.Hash.Make("123456"))
+			fmt.Println(util.Hash.Check("123456", "$2a$10$eKMDMotJNLs0Ghq2HWii2ePOEixpOmWP/lx338wMd7ZVlfyq768e2"))
 			//任务投递
 			job.NewSmsJob("13802990402", "1").Dispatch(ctx)
 			job.NewSmsJob("13802990402", "2").Dispatch(ctx)

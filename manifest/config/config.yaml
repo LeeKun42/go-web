@@ -16,9 +16,9 @@ database:
     type:                  "mysql"
     host:                  "127.0.0.1"
     port:                  "3309"
-    user:                  "jjcc"
-    pass:                  "j62nusynXtijrUlb"
-    name:                  "jjcc_system"
+    user:                  "root"
+    pass:                  "123456"
+    name:                  "test"
     debug:   true
 
 # Redis配置

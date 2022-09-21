@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"go-web/internal/consts"
 	"go-web/internal/dao"
 	"go-web/internal/model"
 	"go-web/internal/model/do"
@@ -11,7 +10,6 @@ import (
 	"time"
 
 	jwt "github.com/gogf/gf-jwt/v2"
-	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -20,31 +18,27 @@ type userService struct{}
 
 var UserService = userService{}
 
-func (us *userService) Register(ctx context.Context, input do.AdminUser) (user *entity.AdminUser) {
-	model := dao.AdminUser.Ctx(ctx)
+func (us *userService) Register(ctx context.Context, input do.User) (user *entity.User) {
+	model := dao.User.Ctx(ctx)
 	userId, _ := model.InsertAndGetId(input)
 	model.WherePri(userId).Scan(&user)
 	return user
 }
 
 func (us *userService) GetList(ctx context.Context, input model.GetUserInput) (res model.GetUserOutput) {
-	model := dao.AdminUser.Ctx(ctx)
+	model := dao.User.Ctx(ctx)
 
 	if input.Name != "" {
-		model = model.WhereLike(dao.AdminUser.Columns().Name, "%"+input.Name+"%")
+		model = model.WhereLike(dao.User.Columns().Name, "%"+input.Name+"%")
 	}
 
 	if input.Mobile != "" {
-		model = model.WhereLike(dao.AdminUser.Columns().Mobile, "%"+input.Mobile+"%")
+		model = model.WhereLike(dao.User.Columns().Mobile, "%"+input.Mobile+"%")
 	}
 	total, _ := model.Count() //获取数据总量
 	model = model.OrderDesc("id")
 	model = model.Offset((input.CurrentPage - 1) * input.PageSize).Limit(input.PageSize)
 	model.Scan(&res.Users)
-	userLen := len(res.Users)
-	for i := 0; i < userLen; i++ {
-		res.Users[i].Mobile = util.Mobile.Decrypt(res.Users[i].Mobile)
-	}
 
 	//分页信息计算
 	res.Total = total
@@ -57,14 +51,13 @@ func (us *userService) GetList(ctx context.Context, input model.GetUserInput) (r
 	return res
 }
 
-func (us *userService) GetUserInfoByUid(ctx context.Context, uid int) (res *entity.AdminUser) {
-	model := dao.AdminUser.Ctx(ctx)
+func (us *userService) GetUserInfoByUid(ctx context.Context, uid int) (res *entity.User) {
+	model := dao.User.Ctx(ctx)
 	model.WherePri(uid).Scan(&res)
-	res.Mobile = util.Mobile.Decrypt(res.Mobile)
 	return
 }
 
-//Jwt用户授权相关
+// Jwt用户授权相关
 var authService *jwt.GfJWTMiddleware
 
 func Auth() *jwt.GfJWTMiddleware {
@@ -131,20 +124,19 @@ func Authenticator(ctx context.Context) (interface{}, error) {
 	var (
 		r         = g.RequestFromCtx(ctx)
 		in        model.UserAuthInput
-		loginUser *entity.AdminUser
+		loginUser *entity.User
 	)
 	if err := r.Parse(&in); err != nil {
 		return "", err
 	}
-	userModel := dao.AdminUser.Ctx(ctx)
-	passwordEncrypt, _ := gmd5.EncryptString(consts.PASSWD_KEY + in.Password)
+	userModel := dao.User.Ctx(ctx)
 
-	err := userModel.Where(dao.AdminUser.Columns().Email, in.Mobile).Scan(&loginUser)
+	err := userModel.Where(dao.User.Columns().Mobile, in.Mobile).Scan(&loginUser)
 
 	if err != nil {
 		panic(err)
 	}
-	if loginUser.Passwd == passwordEncrypt {
+	if util.Hash.Check(in.Password, loginUser.Passwd) {
 		return g.Map{"id": loginUser.Id, "name": loginUser.Name}, nil
 	} else {
 		return nil, gerror.New("密码错误")

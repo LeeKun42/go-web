@@ -14,6 +14,6 @@ type GetUserInput struct {
 }
 
 type GetUserOutput struct {
-	Users []*entity.AdminUser `json:"users"      `
+	Users []*entity.User `json:"users"      `
 	PaginateOutput
 }
